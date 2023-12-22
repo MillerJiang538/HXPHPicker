@@ -18,13 +18,20 @@ extension CALayer {
         }else {
             toSize = size
         }
-        UIGraphicsBeginImageContextWithOptions(toSize, false, scale)
-        guard let context = UIGraphicsGetCurrentContext() else {
-            return nil
+//        UIGraphicsBeginImageContextWithOptions(toSize, false, scale)
+//        guard let context = UIGraphicsGetCurrentContext() else {
+//            return nil
+//        }
+//        render(in: context)
+//        let image = UIGraphicsGetImageFromCurrentImageContext()
+//        UIGraphicsEndImageContext()
+        let format = UIGraphicsImageRendererFormat()
+        format.opaque = false
+        format.scale = scale
+        let render = UIGraphicsImageRenderer(size: toSize, format: format)
+        let image = render.image { context in
+            self.render(in: context.cgContext)
         }
-        render(in: context)
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
         return image
     }
 }

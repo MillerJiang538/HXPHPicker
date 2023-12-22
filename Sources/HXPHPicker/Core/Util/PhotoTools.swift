@@ -398,12 +398,16 @@ public struct PhotoTools {
                 width: Int(resultImage.width * ratio),
                 height: Int(resultImage.height * ratio)
             )
-            UIGraphicsBeginImageContext(size)
-            resultImage.draw(in: CGRect(origin: .zero, size: size))
-            guard let image = UIGraphicsGetImageFromCurrentImageContext() else {
-                UIGraphicsEndImageContext()
-                return data
+//            UIGraphicsBeginImageContext(size)
+//            resultImage.draw(in: CGRect(origin: .zero, size: size))
+            let render = UIGraphicsImageRenderer(size: size)
+            let image = render.image { context in
+                resultImage.draw(in: CGRect(origin: .zero, size: size))
             }
+//            guard let image = UIGraphicsGetImageFromCurrentImageContext() else {
+//                UIGraphicsEndImageContext()
+//                return data
+//            }
             let imageData: Data
             if let data = image.pngData() {
                 imageData = data

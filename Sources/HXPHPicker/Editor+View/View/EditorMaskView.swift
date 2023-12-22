@@ -787,12 +787,21 @@ class EditorMaskView: UIView {
 extension UIImage {
     func convertBlackImage() -> UIImage? {
         let rect = CGRect(origin: .zero, size: size)
-        UIGraphicsBeginImageContextWithOptions(size, false, UIScreen.main.scale)
-        UIColor.black.setFill()
-        UIRectFill(rect)
-        draw(in: rect, blendMode: .destinationOut, alpha: 1)
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
+//        UIGraphicsBeginImageContextWithOptions(size, false, UIScreen.main.scale)
+//        UIColor.black.setFill()
+//        UIRectFill(rect)
+//        draw(in: rect, blendMode: .destinationOut, alpha: 1)
+//        let image = UIGraphicsGetImageFromCurrentImageContext()
+//        UIGraphicsEndImageContext()
+        let format = UIGraphicsImageRendererFormat()
+        format.opaque = false
+        format.scale = UIScreen.main.scale
+        let render = UIGraphicsImageRenderer(size: size, format: format)
+        let image = render.image { context in
+            UIColor.black.setFill()
+            UIRectFill(rect)
+            draw(in: rect, blendMode: .destinationOut, alpha: 1)
+        }
         return image
     }
 }

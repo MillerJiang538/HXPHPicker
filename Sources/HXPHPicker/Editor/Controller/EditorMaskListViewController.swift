@@ -149,19 +149,27 @@ extension EditorMaskListViewController: UICollectionViewDataSource, UICollection
                     .paragraphStyle: paragraphStyle
                 ]
                 let rect = text.boundingRect(ofAttributes: attDic, size: .init(width: 9999, height: 9999))
-                UIGraphicsBeginImageContextWithOptions(rect.size, false, UIScreen.main.scale)
-                let string = text as NSString
-                string.draw(in: rect, withAttributes: attDic)
-                let image = UIGraphicsGetImageFromCurrentImageContext()
-                UIGraphicsEndImageContext()
+//                UIGraphicsBeginImageContextWithOptions(rect.size, false, UIScreen.main.scale)
+//                let string = text as NSString
+//                string.draw(in: rect, withAttributes: attDic)
+//                let image = UIGraphicsGetImageFromCurrentImageContext()
+//                UIGraphicsEndImageContext()
+                let format = UIGraphicsImageRendererFormat()
+                format.opaque = false
+                format.scale = UIScreen.main.scale
+                let render = UIGraphicsImageRenderer(size: rect.size, format: format)
+                let image = render.image { context in
+                    let string = text as NSString
+                    string.draw(in: rect, withAttributes: attDic)
+                }
                 DispatchQueue.main.async {
                     ProgressHUD.hide(forView: self.view)
-                    if let image = image {
+//                    if let image = image {
                         self.dismiss(animated: true)
                         self.delegate?.editorMaskListViewController(self, didSelected: image)
-                    }else {
-                        ProgressHUD.showWarning(addedTo: self.view, text: "处理失败".localized, animated: true, delayHide: 1.5)
-                    }
+//                    }else {
+//                        ProgressHUD.showWarning(addedTo: self.view, text: "处理失败".localized, animated: true, delayHide: 1.5)
+//                    }
                 }
             }
         }
